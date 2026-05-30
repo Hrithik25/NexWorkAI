@@ -1,12 +1,9 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAppSelector } from '../store/hooks';
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = () => {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
-
-  return <>{children}</>;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

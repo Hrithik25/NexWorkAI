@@ -5,20 +5,25 @@ interface LoginPayload {
   password: string;
 }
 
-interface LoginResponse {
+type ResponseData = {
   token: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
+  role: string;
+  email: string;
+  type: string;
+};
+
+interface LoginResponse {
+  success: boolean;
+  message: string;
+  data: ResponseData;
+  timestamp: string;
 }
 
 export const authService = {
   login: (data: LoginPayload) =>
     axiosClient
       .post<LoginResponse>('/auth/login', data)
-      .then((res) => res.data),
+      .then((res) => res.data?.data),
 
   logout: () => axiosClient.post('/auth/logout'),
 

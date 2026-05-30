@@ -9,5 +9,4 @@ public class NexworkaiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NexworkaiApplication.class, args);
 	}
-
 }

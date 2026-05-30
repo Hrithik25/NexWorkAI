@@ -1,11 +1,14 @@
 import axios from 'axios';
 
+console.log('API URL:', import.meta.env.VITE_API_URL);
+
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: false,
 });
 
 // Request Interceptor
@@ -22,7 +25,7 @@ axiosClient.interceptors.request.use(
 
 // Response Interceptor
 axiosClient.interceptors.response.use(
-  (response) => response.data,
+  (response) => response,
   (error) => {
     const status = error.response?.status;
 
@@ -39,7 +42,10 @@ axiosClient.interceptors.response.use(
       console.error('Server error');
     }
 
-    return Promise.reject(error);
+    const message =
+      error.response?.data?.message || error.message || 'Something went wrong';
+
+    return Promise.reject(new Error(message));
   }
 );
 

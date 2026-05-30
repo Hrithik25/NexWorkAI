@@ -17,20 +17,20 @@ import EmailIcon from '../../assets/EmailIcon';
 import { LockIcon } from '../../assets/LockIcon';
 import { EyeOffIcon } from '../../assets/EyeOffIcon';
 import { EyeIcon } from '../../assets/EyeIcon';
-import { useNavigate } from 'react-router-dom';
+import { useLogin } from '../../hooks/useAuth';
+import { STRINGS } from '../../constants/strings';
 
-type Props = {};
+const LoginForm = () => {
+  const login = useLogin();
+  const labels = STRINGS.AUTH;
 
-const LoginForm = (props: Props) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPass, setShowPass] = useState<boolean>(false);
   const [remember, setRemember] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+
   const [emailErr, setEmailErr] = useState<string>('');
   const [passErr, setPassErr] = useState<string>('');
-  const navigate = useNavigate();
 
   const textFieldSx: SxProps<Theme> = {
     '& .MuiOutlinedInput-root': {
@@ -43,19 +43,9 @@ const LoginForm = (props: Props) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(email, password);
-    if (email === password) {
-      navigate('/');
-    }
-    // setError('');
-    // if (!validate()) return;
-    // setLoading(true);
-    // // Replace with your real auth call, e.g.:
-    // // const res = await fetch("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setError('Invalid credentials. Try a demo account below.');
-    // }, 2000);
+    // if (!validate()) return
+
+    login.mutate({ email, password });
   };
 
   return (
@@ -63,10 +53,10 @@ const LoginForm = (props: Props) => {
       {/* Heading */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h5" sx={{ color: 'text.primary', mb: 0.75 }}>
-          Welcome back
+          {labels.loginTitle}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Sign in to your workspace
+          {labels.loginSubtitle}
         </Typography>
       </Box>
 
@@ -79,7 +69,7 @@ const LoginForm = (props: Props) => {
       >
         {/* Email */}
         <TextField
-          label="Work email"
+          label={labels.emailLabel}
           type="email"
           autoComplete="email"
           value={email}
@@ -87,7 +77,7 @@ const LoginForm = (props: Props) => {
             setEmail(e.target.value);
             setEmailErr('');
           }}
-          placeholder="you@company.com"
+          placeholder={labels.emailPlaceholder}
           error={!!emailErr}
           helperText={emailErr}
           sx={textFieldSx}
@@ -104,7 +94,7 @@ const LoginForm = (props: Props) => {
 
         {/* Password */}
         <TextField
-          label="Password"
+          label={labels.passwordLabel}
           type={showPass ? 'text' : 'password'}
           autoComplete="current-password"
           value={password}
@@ -157,7 +147,7 @@ const LoginForm = (props: Props) => {
             }
             label={
               <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-                Keep me signed in
+                {labels.keepSignedIn}
               </Typography>
             }
           />
@@ -166,7 +156,7 @@ const LoginForm = (props: Props) => {
             underline="hover"
             sx={{ fontSize: 13, color: 'primary.main', fontWeight: 500 }}
           >
-            Forgot password?
+            {labels.forgotPassword}
           </Link>
         </Box>
 
@@ -176,7 +166,7 @@ const LoginForm = (props: Props) => {
           variant="contained"
           fullWidth
           size="large"
-          disabled={loading}
+          disabled={login.isPending}
           sx={{
             mt: 0.5,
             height: 48,
@@ -186,15 +176,34 @@ const LoginForm = (props: Props) => {
             '&.Mui-disabled': { background: '#818cf8', color: '#fff' },
           }}
         >
-          {loading ? (
+          {login.isPending ? (
             <>
               <CircularProgress size={16} sx={{ color: '#fff', mr: 1 }} />
-              Signing in…
+              {labels.signingIn}
             </>
           ) : (
-            'Sign in to workspace'
+            labels.loginButton
           )}
         </Button>
+
+        {/* New User Signup */}
+        {/* <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            mt: -0.5,
+          }}
+        >
+          <Typography>New User? </Typography>
+          <Link
+            href="#"
+            underline="hover"
+            sx={{ fontSize: 13, color: 'primary.main', fontWeight: 500 }}
+          >
+            Sign Up
+          </Link>
+        </Box> */}
       </Box>
 
       {/* Footer */}

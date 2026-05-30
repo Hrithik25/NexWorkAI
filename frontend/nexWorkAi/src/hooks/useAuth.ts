@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { authService } from '../api/services/authService';
 import { logout, setCredentials } from '../store/slices/authSlice';
 
+// type
+
 export const useLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -11,7 +13,9 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: authService.login,
     onSuccess: (data) => {
-      dispatch(setCredentials(data));
+      dispatch(
+        setCredentials({ token: data?.token, user: { email: data?.email } })
+      );
       navigate('/');
     },
   });

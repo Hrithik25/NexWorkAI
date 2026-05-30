@@ -1,4 +1,5 @@
 import { Box, Chip, Typography } from '@mui/material';
+import { STRINGS } from '../../constants/strings';
 
 type Stat = {
   value: string;
@@ -6,10 +7,11 @@ type Stat = {
 };
 
 const BrandPanel = () => {
+  const labels = STRINGS.LOGIN;
   const STATS: Stat[] = [
-    { value: '12,400+', label: 'Employees managed' },
-    { value: '340+', label: 'Enterprise clients' },
-    { value: '99.9%', label: 'Uptime SLA' },
+    { value: '12,400+', label: labels.employeesManaged },
+    { value: '340+', label: labels.enterpriseClients },
+    { value: '99.9%', label: labels.uptimeSLA },
   ];
 
   return (
@@ -143,7 +145,7 @@ const BrandPanel = () => {
             letterSpacing: '0.01em',
           }}
         >
-          Smart Workforce Hub
+          {STRINGS.APP_NAME}
         </Typography>
       </Box>
 
@@ -159,12 +161,12 @@ const BrandPanel = () => {
             mb: 2,
           }}
         >
-          Your people,{' '}
+          {labels.yourPeople}{' '}
           <Box
             component="span"
             sx={{ color: '#818cf8', fontWeight: 300, fontStyle: 'italic' }}
           >
-            unified.
+            {labels.unified}
           </Box>
         </Typography>
 
@@ -177,8 +179,7 @@ const BrandPanel = () => {
             fontWeight: 300,
           }}
         >
-          Enterprise HR, task management, and AI-powered insights — all in one
-          seamless workspace.
+          {labels.description}
         </Typography>
 
         {/* Stats row */}

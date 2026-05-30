@@ -3,14 +3,25 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface AuthState {
   token: string | null;
-  user: { id: number; name: string; email: string } | null;
+  user: { id?: number; name?: string; email: string } | null;
   isAuthenticated: boolean;
 }
+
+const isTokenValid = (token: string | null): boolean => {
+  if (!token) return false;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1])); // decode JWT
+    return payload.exp * 1000 > Date.now(); // check expiry
+  } catch {
+    return false;
+  }
+};
 
 const initialState: AuthState = {
   token: localStorage.getItem('token'),
   user: null,
-  isAuthenticated: !!localStorage.getItem('token'),
+  isAuthenticated: isTokenValid(localStorage.getItem('token')),
 };
 
 const authSlice = createSlice({
